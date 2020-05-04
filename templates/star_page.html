@@ -1,0 +1,144 @@
+{% extends "bootstrap/base.html"  %}
+{%- block head %}
+<title>秒优大数据</title>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+<meta name="description" content="">
+<meta name="author" content="">
+<link rel="icon" href="../static/imgs/mu.png">
+
+{%- block styles %}
+<!-- Bootstrap -->
+<link href="{{bootstrap_find_resource('css/bootstrap.css', cdn='bootstrap')}}" rel="stylesheet">
+<!-- Bootstrap core CSS -->
+<!-- bb——这里是通过下载网页上的css文件，保存在static目录下即可-->
+<link href="../static/css/bootstrap.min.css" rel="stylesheet">
+<!-- Custom styles for this template -->
+{%- endblock styles %}
+{%- endblock head %}
+
+{% block body -%}
+{% block navbar %}
+<div class="navbar-wrapper">
+    <div class="container" style="width: auto">
+
+        <nav class="navbar navbar-inverse navbar-static-top">
+            <div class="container"  style="width: auto">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+                            aria-expanded="false" aria-controls="navbar">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="/star" style="padding: 15px 30px">秒优大数据</a>
+                </div>
+                <div id="navbar" class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav">
+                        {% for name, en_name in star_dict.items() %}
+                        <li>
+                            <a href="/star/{{en_name}}">{{name}}</a>
+                        </li>
+                        {% endfor %}
+                        <li>
+                            <a href="/star/date">按时间</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+    </div>
+</div>
+
+{%- endblock navbar %}
+{% block content -%}
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-primary">
+            <div class="panel-heading text-center" style="background-color: #ffffff; border-color: #ffffff; color: #0f0f0f">
+                <h3>{{name_ch}}图片</h3>
+            </div>
+            <div class="panel-body">
+                {% for url, date in url_date%}
+                <div class="col-sm-12" >
+                    <div class="thumbnail">
+                        <img src=".{{url}}" alt="...">
+                        <div class="caption" style="text-align: center">
+                            <h3>{{date}}</h3>
+                            <h3>标签栏</h3>
+<!--                        <p>文字说明</p>-->
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+
+            <nav aria-label="Page navigation" style="text-align: center">
+                <ul class="pagination" style="font-size: 30px">
+                    {% if not paginate.has_prev %}
+                    <li  class="disabled">
+                        <a aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    {% else %}
+                    <li>
+                        <a href="{{url_for('star.show_star_page', name=name, page=paginate.prev_num)}}" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    {% endif  %}
+                    {% for page in paginate.iter_pages(1,1,3,1) %}
+<!--                    <p>{{num}}</p>-->
+                    <li {% if page == paginate.page %} class="active"{% endif  %}>
+                    {%if page%}
+                        <li class="page-item {%if page==paginate.page%}active{%endif%}">
+                            <a class="page-link" href="{{url_for('star.show_star_page', name=name, page=page)}}">{{page}}</a>
+                        </li>
+                    {%else%}
+                        <li class="page-item disabled"><a class="page-link" href="#">&hellip;</a></li>
+                    {%endif%}
+
+
+                    {% endfor  %}
+                    {% if not paginate.has_next %}
+                    <li  class="disabled">
+                        <a aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                    {% else %}
+                    <li>
+                        <a href="{{url_for('star.show_star_page', name=name, page=paginate.next_num)}}" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                    {% endif  %}
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>
+{%-endblock content%}
+
+{% block scripts %}
+<script src="{{bootstrap_find_resource('jquery.js', cdn='jquery')}}"></script>
+<script src="{{bootstrap_find_resource('js/bootstrap.js', cdn='bootstrap')}}"></script>
+
+
+<script src="../static/js/jquery.min.js"></script>
+
+<script src="../static/js/bootstrap.min.js"></script>
+
+
+{%- endblock scripts %}
+
+{%- endblock body %}
+
+
+
