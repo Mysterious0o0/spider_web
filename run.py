@@ -64,6 +64,8 @@ def get_start_page(url_list):
             x = re.search(r'(?<=【).*?(?=】)', txt_list[i])
             if x is None:
                 x = re.search(r'(.* .*)', txt_list[i].strip())
+            if x is None:
+                continue
             if len(x.group().split(' ')) != 2:
                 continue
             web_time_str = x.group().split(' ')[0]
