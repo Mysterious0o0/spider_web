@@ -2,6 +2,7 @@ import os
 import re
 import uuid
 import glob
+import argparse
 import requests
 import datetime
 import subprocess
@@ -19,6 +20,11 @@ from utility.util_star_map import get_config_value, star_name_dict
 import ssl
 ssl._create_default_https_context = ssl._create_unverified_context
 
+parser = argparse.ArgumentParser()
+parser.add_argument('-d', '--day', type=int, action='store', required=False,
+                    help='day 属性，必填, 用于指定爬取时间，默认为1，即爬取前一天的数据', default=1)
+args = parser.parse_args()
+
 
 # 生成随机User-Agent
 headers = {
@@ -35,7 +41,7 @@ for star_name in star_name_dict.values():
         os.makedirs(star_path)
 
 # 爬取前一天的数据
-time_str = (datetime.datetime.today() - datetime.timedelta(1)).__format__('%Y.%m.%d')
+time_str = (datetime.datetime.today() - datetime.timedelta(args.day)).__format__('%Y.%m.%d')
 
 data = []
 
@@ -124,11 +130,14 @@ def main():
             session.execute(StarInfo.__table__.insert(), data)
             session.commit()
             session.close()
-            spider_log_info('success-----mysql save success')
+            spider_log_info('success-----mysql save success len:{}'.format(data))
+            print('success-----mysql save success len:{}'.format(data))
+
         except Exception as e:
 
             spider_log_info('error-------mysql db save error: {}\n data: {}'.format(e, data))
     else:
+        print('None-------mysql db save None\n date: {}'.format(time_str))
         spider_log_info('None-------mysql db save None\n date: {}'.format(time_str))
 
 
